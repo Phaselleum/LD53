@@ -44,4 +44,9 @@ public class CanvasButtons : MonoBehaviour
         TruckBehaviour.Instance.ResetPosition();
         TimerBarBehaviour.Instance.Reset();
     }
+
+    public void Menu()
+    {
+        SceneManager.LoadScene(0);
+    }
 }

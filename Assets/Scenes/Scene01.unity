@@ -303,6 +303,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Camera_UI
       objectReference: {fileID: 0}
+    - target: {fileID: 9041623163221697101, guid: 90034156dd0751245975f13fa1800c80, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -35
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -752,7 +756,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 1.48, y: 1.78}
     newSize: {x: 2, y: 2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

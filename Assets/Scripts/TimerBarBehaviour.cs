@@ -8,9 +8,9 @@ public class TimerBarBehaviour : MonoBehaviour
 {
     public static TimerBarBehaviour Instance;
     
-    private static readonly int barWidth = 900;
-    private static readonly int barHeight = 55;
-    private static readonly int halfBarWidth = 450;
+    private static readonly int barWidth = 1080;
+    private static readonly int barHeight = 90;
+    private static readonly int halfBarWidth = barWidth / 2;
     
     /// <summary> bar time indicator </summary>
     [SerializeField] private RectTransform elapsedRect;
@@ -72,7 +72,7 @@ public class TimerBarBehaviour : MonoBehaviour
         if (rightPosition <= 0)
         {
             rightPosition = 0;
-            elapsedRect.localPosition = -halfBarWidth * Vector3.right;
+            elapsedRect.localPosition = (-halfBarWidth - 18) * Vector3.right;
             recordingMovement = false;
             playbackMovement = true;
             rightPosition = barWidth;
@@ -81,7 +81,7 @@ public class TimerBarBehaviour : MonoBehaviour
             inputRecording = movementRecorder.GetRecording();
             Debug.Log(string.Join(Environment.NewLine, inputRecording));
         }
-        elapsedRect.localPosition = (halfBarWidth - rightPosition) * Vector3.right;
+        elapsedRect.localPosition = (halfBarWidth - rightPosition - 18) * Vector3.right;
     }
 
     private void FixedUpdate()
@@ -164,12 +164,12 @@ public class TimerBarBehaviour : MonoBehaviour
         {
             rightPosition = 0;
             timerStarted = false;
-            elapsedRect.localPosition = -halfBarWidth * Vector3.right;
+            elapsedRect.localPosition = (-halfBarWidth - 18) * Vector3.right;
             playbackMovement = false;
             TruckBehaviour.Instance.EndMovement();
         }
         //bar indicator
-        elapsedRect.localPosition = (halfBarWidth - rightPosition) * Vector3.right;
+        elapsedRect.localPosition = (halfBarWidth - rightPosition - 18) * Vector3.right;
         if (inputRecording.ContainsKey(playbackFrameCount))
         {
             Debug.Log($"Input: {inputRecording[playbackFrameCount]}");

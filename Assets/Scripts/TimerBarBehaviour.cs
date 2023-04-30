@@ -6,13 +6,16 @@ using UnityEngine.Serialization;
 
 public class TimerBarBehaviour : MonoBehaviour
 {
+    public static TimerBarBehaviour Instance;
+    
     private static readonly int barWidth = 900;
     private static readonly int barHeight = 55;
     private static readonly int halfBarWidth = 450;
     
+    /// <summary> bar time indicator </summary>
     [SerializeField] private RectTransform elapsedRect;
+    /// <summary> bar time indicator position (from R) </summary>
     private float rightPosition = barWidth;
-    public static TimerBarBehaviour Instance;
 
     public bool timerStarted = false;
     private MovementRecorder movementRecorder;
@@ -33,7 +36,6 @@ public class TimerBarBehaviour : MonoBehaviour
     private Rect currentBarRect;
     private GameObject currentBar;
     private GameObject currentBarPrefab;
-    private float currentRectWidth;
 
     private void Awake()
     {
@@ -45,72 +47,41 @@ public class TimerBarBehaviour : MonoBehaviour
         TruckBehaviour.Instance.car.isKinematic = true;
     }
 
-    private void Update()
-    {
-        if (timerStarted && recordingMovement) RecordInputs();
-        if (timerStarted && !recordingMovement) return;
-        if (Input.GetKeyDown(KeyCode.Space) && !timerStarted)
-        {
-            StartTimer();
-            movementRecorder = new();
-            recordingStartTime = 0;
-            fixedFrameCount = 0;
-            RecordInputs();
-        }
-
-        if (!timerStarted) return;
-        
-        if (rightPosition == 0) return;
-        recordingMovement = true;
-        //elapsedRect.position += Time.deltaTime * Vector3.right * elapsedRect.rect.width * .2f;
-        rightPosition -= Time.deltaTime * barWidth * .2f;
-        if (rightPosition <= 0)
-        {
-            rightPosition = 0;
-            elapsedRect.localPosition = -halfBarWidth * Vector3.right;
-            recordingMovement = false;
-            playbackMovement = true;
-            rightPosition = barWidth;
-            TruckBehaviour.Instance.car.isKinematic = false;
-            playbackFrameCount = 0;
-            inputRecording = movementRecorder.GetRecording();
-            Debug.Log(string.Join(Environment.NewLine, inputRecording));
-        }
-        elapsedRect.localPosition = (halfBarWidth - rightPosition) * Vector3.right;
-    }
-
+    /// <summary>
+    /// Converts inputs into recorder entry requests. Also handles bar visuals.
+    /// </summary>
     private void RecordInputs()
     {
         bool oldMoving = moving;
         bool oldBraking = braking;
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            movementRecorder.AddEntry(fixedFrameCount, MovementState.MOVEMENTSTART);
+            movementRecorder.AddEntry(fixedFrameCount, MovementState.MOVEMENT_START);
             moving = true;
         }
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            movementRecorder.AddEntry(fixedFrameCount, MovementState.MOVEMENTEND);
+            movementRecorder.AddEntry(fixedFrameCount, MovementState.MOVEMENT_END);
             moving = false;
         }
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            movementRecorder.AddEntry(fixedFrameCount, MovementState.BRAKINGSTART);
+            movementRecorder.AddEntry(fixedFrameCount, MovementState.BRAKING_START);
             braking = true;
         }
         if (Input.GetKeyUp(KeyCode.LeftControl))
         {
-            movementRecorder.AddEntry(fixedFrameCount, MovementState.BRAKINGEND);
+            movementRecorder.AddEntry(fixedFrameCount, MovementState.BRAKING_END);
             braking = false;
         }
 
+        //handle bar visuals
         if (moving != oldMoving || braking != oldBraking)
         {
             if (!moving && !braking)
             {
                 ((RectTransform)currentBar.transform).sizeDelta =
                     new Vector2((halfBarWidth - rightPosition) - currentBar.transform.localPosition.x, barHeight);
-                currentRectWidth = 0;
                 return;
             }
             if (moving && braking)
@@ -127,11 +98,9 @@ public class TimerBarBehaviour : MonoBehaviour
             currentBar = Instantiate(currentBarPrefab, barParent);
             currentBar.transform.localPosition = (halfBarWidth - rightPosition) * Vector3.right;
             ((RectTransform)currentBar.transform).sizeDelta = new Vector2(0, barHeight);
-            currentRectWidth = 0;
 
         } else if (moving || braking)
         {
-            currentRectWidth += Time.fixedDeltaTime * barHeight;
             ((RectTransform)currentBar.transform).sizeDelta =
                 new Vector2((halfBarWidth - rightPosition) - currentBar.transform.localPosition.x, barHeight);
         }
@@ -139,15 +108,49 @@ public class TimerBarBehaviour : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //handle playback mode
         if (playbackMovement) PlayBackFixedFrame();
-        if (!recordingMovement) return;
+        //handle input recording
+        if (timerStarted && recordingMovement) RecordInputs();
+        if (timerStarted && !recordingMovement) return;
+        //start input recording
+        if (Input.GetKeyDown(KeyCode.Space) && !timerStarted)
+        {
+            timerStarted = true;
+            movementRecorder = new();
+            recordingStartTime = 0;
+            fixedFrameCount = 0;
+            RecordInputs();
+        }
+
         if (!timerStarted) return;
-        fixedFrameCount++;
+        
+        if (rightPosition == 0) return;
+        recordingMovement = true;
+        rightPosition -= Time.deltaTime * barWidth * .2f;
+        //end condition for input recording
+        if (rightPosition <= 0)
+        {
+            rightPosition = 0;
+            elapsedRect.localPosition = -halfBarWidth * Vector3.right;
+            recordingMovement = false;
+            playbackMovement = true;
+            rightPosition = barWidth;
+            TruckBehaviour.Instance.car.isKinematic = false;
+            playbackFrameCount = 0;
+            inputRecording = movementRecorder.GetRecording();
+            Debug.Log(string.Join(Environment.NewLine, inputRecording));
+        }
+        elapsedRect.localPosition = (halfBarWidth - rightPosition) * Vector3.right;
     }
 
+    /// <summary>
+    /// Handles playback of recorded inputs
+    /// </summary>
     private void PlayBackFixedFrame()
     {
         rightPosition -= Time.fixedDeltaTime * barWidth * .2f;
+        //playback end condition
         if (rightPosition <= 0)
         {
             rightPosition = 0;
@@ -155,25 +158,30 @@ public class TimerBarBehaviour : MonoBehaviour
             elapsedRect.localPosition = -halfBarWidth * Vector3.right;
             playbackMovement = false;
         }
+        //bar indicator
         elapsedRect.localPosition = (halfBarWidth - rightPosition) * Vector3.right;
-        //Debug.Log("Playback!");
         if (inputRecording.ContainsKey(playbackFrameCount))
         {
             Debug.Log($"Input: {inputRecording[playbackFrameCount]}");
             TruckBehaviour.Instance.Move(inputRecording[playbackFrameCount]);
         }
         playbackFrameCount++;
+        
+        //alternate playback end condition
         if (playbackFrameCount > fixedFrameCount)
         {
             TruckBehaviour.Instance.EndMovement();
+            return;
         }
+        
+        if (!recordingMovement) return;
+        if (!timerStarted) return;
+        fixedFrameCount++;
     }
 
-    public void StartTimer()
-    {
-        timerStarted = true;
-    }
-
+    /// <summary>
+    /// Resets all timers and bars as well as vehicle physics
+    /// </summary>
     public void Reset()
     {
         elapsedRect.localPosition = -halfBarWidth * Vector3.right;
@@ -186,7 +194,6 @@ public class TimerBarBehaviour : MonoBehaviour
         TruckBehaviour.Instance.car.isKinematic = true;
         moving = false;
         braking = false;
-        currentRectWidth = 0;
         foreach(Transform child in barParent) Destroy(child.gameObject);
     }
 }

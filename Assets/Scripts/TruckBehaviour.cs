@@ -40,7 +40,7 @@ public class TruckBehaviour : MonoBehaviour
         wheelRJointMotor = wheelRJoint.motor;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (movement) MovementAction();
         else IdleAction();
@@ -48,25 +48,42 @@ public class TruckBehaviour : MonoBehaviour
         else UnBreakingAction();
     }
 
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        //Checks for checkpoint or win condition (only if the vehicle reaches the point after the time has passed)
+        if (TimerBarBehaviour.Instance.playbackMovement) return;
+        if (TimerBarBehaviour.Instance.recordingMovement) return;
+        if (CanvasButtons.Instance.winScreen.activeSelf) return;
+        if(other.name == "flag") SetCheckpoint(other.transform.position);
+        if(other.name == "goal") CanvasButtons.Instance.ShowWinScreen();
+    }
+
+    /// <summary>
+    /// Handle movement playback commands (called from outside)
+    /// </summary>
+    /// <param name="movementState">Movement state to enter</param>
     public void Move(MovementState movementState)
     {
         switch (movementState)
         {
-            case MovementState.MOVEMENTSTART:
+            case MovementState.MOVEMENT_START:
                 movement = true;
                 break;
-            case MovementState.MOVEMENTEND:
+            case MovementState.MOVEMENT_END:
                 movement = false;
                 break;
-            case MovementState.BRAKINGSTART:
+            case MovementState.BRAKING_START:
                 braking = true;
                 break;
-            case MovementState.BRAKINGEND:
+            case MovementState.BRAKING_END:
                 braking = false;
                 break;
         }
     }
 
+    /// <summary>
+    /// Called at the end of movement playback. Resets motors and movement flags
+    /// </summary>
     public void EndMovement()
     {
         movement = false;
@@ -77,6 +94,9 @@ public class TruckBehaviour : MonoBehaviour
         wheelRJoint.motor = wheelRJointMotor;
     }
 
+    /// <summary>
+    /// Called when breaks are released to return drag to default values
+    /// </summary>
     private void UnBreakingAction()
     {
         car.drag = 0;
@@ -84,6 +104,9 @@ public class TruckBehaviour : MonoBehaviour
         wheelR.angularDrag = 2;
     }
 
+    /// <summary>
+    /// Moves the vehicle through a combination of wheel motors and general forward force application
+    /// </summary>
     private void MovementAction()
     {
         angleCar = transform.localEulerAngles.z;
@@ -129,6 +152,9 @@ public class TruckBehaviour : MonoBehaviour
         wheelRJoint.motor = wheelRJointMotor;*/
     }
 
+    /// <summary>
+    /// Sets vehicle drag and wheel angular drag to actuate brakes
+    /// </summary>
     private void BrakingAction()
     {
         if (wheelLBehaviour.isMakingContact && wheelRBehaviour.isMakingContact)
@@ -139,6 +165,9 @@ public class TruckBehaviour : MonoBehaviour
         wheelR.angularDrag = 100;
     }
 
+    /// <summary>
+    /// Resets all vehicle parts. Vehicle is placed at last checkpoint or scene start
+    /// </summary>
     public void ResetPosition()
     {
         transform.position = initialPosition;
@@ -154,14 +183,10 @@ public class TruckBehaviour : MonoBehaviour
         wheelR.angularVelocity = 0;
     }
 
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if (TimerBarBehaviour.Instance.playbackMovement) return;
-        if (TimerBarBehaviour.Instance.recordingMovement) return;
-        if(other.name == "flag") SetCheckpoint(other.transform.position);
-        if(other.name == "goal") CanvasButtons.Instance.ShowWinScreen();
-    }
-
+    /// <summary>
+    /// Sets the reset position to a given position (for checkpoints)
+    /// </summary>
+    /// <param name="pos"></param>
     public void SetCheckpoint(Vector3 pos)
     {
         initialPosition = pos;

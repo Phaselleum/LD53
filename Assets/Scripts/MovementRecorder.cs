@@ -12,6 +12,11 @@ public class MovementRecorder
         inputRecording = new();
     }
 
+    /// <summary>
+    /// Adds entries to the recording Dictionary
+    /// </summary>
+    /// <param name="time">time in frames after the recording started</param>
+    /// <param name="state">state to be recorded</param>
     public void AddEntry(int time, MovementState state)
     {
         try
@@ -24,6 +29,10 @@ public class MovementRecorder
         }
     }
 
+    /// <summary>
+    /// returns the recording Dictionary
+    /// </summary>
+    /// <returns></returns>
     public Dictionary<int, MovementState> GetRecording()
     {
         return inputRecording;
@@ -32,8 +41,8 @@ public class MovementRecorder
 
 public enum MovementState {
     NOTHING,
-    MOVEMENTSTART,
-    MOVEMENTEND,
-    BRAKINGSTART,
-    BRAKINGEND
+    MOVEMENT_START,
+    MOVEMENT_END,
+    BRAKING_START,
+    BRAKING_END
 }

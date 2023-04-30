@@ -8,7 +8,7 @@ public class CanvasButtons : MonoBehaviour
 {
     public static CanvasButtons Instance;
 
-    [SerializeField] private GameObject winScreen;
+    public GameObject winScreen;
 
     private void Awake()
     {
@@ -17,6 +17,7 @@ public class CanvasButtons : MonoBehaviour
 
     private void Update()
     {
+        //returns to the default level
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (winScreen.activeSelf)
@@ -27,11 +28,17 @@ public class CanvasButtons : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Displays the winscreen overlay
+    /// </summary>
     public void ShowWinScreen()
     {
         winScreen.SetActive(true);
     }
 
+    /// <summary>
+    /// Resets the map to the last reached checkpoint
+    /// </summary>
     public void Reset()
     {
         TruckBehaviour.Instance.ResetPosition();

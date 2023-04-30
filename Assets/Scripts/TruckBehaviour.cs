@@ -92,16 +92,7 @@ public class TruckBehaviour : MonoBehaviour
         wheelRJointMotor.motorSpeed = 0;
         wheelLJoint.motor = wheelLJointMotor;
         wheelRJoint.motor = wheelRJointMotor;
-    }
-
-    /// <summary>
-    /// Called when breaks are released to return drag to default values
-    /// </summary>
-    private void UnBreakingAction()
-    {
-        car.drag = 0;
-        wheelL.angularDrag = 2;
-        wheelR.angularDrag = 2;
+        UnBreakingAction();
     }
 
     /// <summary>
@@ -116,14 +107,16 @@ public class TruckBehaviour : MonoBehaviour
         {
             wheelLJointMotor.motorSpeed = -Mathf.Clamp(wheelLJointMotor.motorSpeed - (acceleration - gravity 
                 * Mathf.PI * (angleCar / 180) * 80) * Time.deltaTime, maxSpeed, -maxSpeed);
-            car.AddRelativeForce(speed * Time.fixedDeltaTime * transform.right);
-            //Debug.Log($"Moving L: {wheelLJointMotor.motorSpeed}");
         }
 
         if (wheelRBehaviour.isMakingContact)
         {
             wheelRJointMotor.motorSpeed = -Mathf.Clamp(wheelRJointMotor.motorSpeed - (acceleration - gravity 
                 * Mathf.PI * (angleCar / 180) * 80) * Time.deltaTime, maxSpeed, -maxSpeed);
+        }
+
+        if (wheelLBehaviour.isMakingContact && wheelRBehaviour.isMakingContact)
+        {
             car.AddRelativeForce(speed * Time.fixedDeltaTime * transform.right);
         }
 
@@ -135,6 +128,10 @@ public class TruckBehaviour : MonoBehaviour
 
     private void IdleAction()
     {
+        wheelLJointMotor.motorSpeed = 0;
+        wheelRJointMotor.motorSpeed = 0;
+        wheelLJoint.motor = wheelLJointMotor;
+        wheelRJoint.motor = wheelRJointMotor;
         /*if (!TimerBarBehaviour.Instance.playbackMovement) return;
         if (wheelLJointMotor.motorSpeed < 0)
         {
@@ -166,6 +163,16 @@ public class TruckBehaviour : MonoBehaviour
     }
 
     /// <summary>
+    /// Called when breaks are released to return drag to default values
+    /// </summary>
+    private void UnBreakingAction()
+    {
+        car.drag = 0;
+        wheelL.angularDrag = 2;
+        wheelR.angularDrag = 2;
+    }
+
+    /// <summary>
     /// Resets all vehicle parts. Vehicle is placed at last checkpoint or scene start
     /// </summary>
     public void ResetPosition()
@@ -181,6 +188,7 @@ public class TruckBehaviour : MonoBehaviour
         wheelR.velocity = Vector2.zero;
         wheelR.rotation = 0;
         wheelR.angularVelocity = 0;
+        UnBreakingAction();
     }
 
     /// <summary>

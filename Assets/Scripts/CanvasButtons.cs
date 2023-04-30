@@ -33,7 +33,7 @@ public class CanvasButtons : MonoBehaviour
     /// </summary>
     public void ShowWinScreen()
     {
-        winScreen.SetActive(true);
+        //winScreen.SetActive(true);
     }
 
     /// <summary>

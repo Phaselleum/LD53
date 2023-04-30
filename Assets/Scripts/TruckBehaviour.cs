@@ -112,6 +112,7 @@ public class TruckBehaviour : MonoBehaviour
 
     private void IdleAction()
     {
+        /*if (!TimerBarBehaviour.Instance.playbackMovement) return;
         if (wheelLJointMotor.motorSpeed < 0)
         {
             wheelLJointMotor.motorSpeed = Mathf.Clamp(wheelLJointMotor.motorSpeed - (deceleration - gravity
@@ -125,7 +126,7 @@ public class TruckBehaviour : MonoBehaviour
         }
 
         wheelLJoint.motor = wheelLJointMotor;
-        wheelRJoint.motor = wheelRJointMotor;
+        wheelRJoint.motor = wheelRJointMotor;*/
     }
 
     private void BrakingAction()
@@ -153,10 +154,12 @@ public class TruckBehaviour : MonoBehaviour
         wheelR.angularVelocity = 0;
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    { 
-            if(other.name == "flag") SetCheckpoint(other.transform.position);
-            if(other.name == "goal") CanvasButtons.Instance.ShowWinScreen();
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (TimerBarBehaviour.Instance.playbackMovement) return;
+        if (TimerBarBehaviour.Instance.recordingMovement) return;
+        if(other.name == "flag") SetCheckpoint(other.transform.position);
+        if(other.name == "goal") CanvasButtons.Instance.ShowWinScreen();
     }
 
     public void SetCheckpoint(Vector3 pos)

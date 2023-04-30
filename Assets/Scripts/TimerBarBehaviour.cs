@@ -6,16 +6,20 @@ using UnityEngine.Serialization;
 
 public class TimerBarBehaviour : MonoBehaviour
 {
+    private static readonly int barWidth = 900;
+    private static readonly int barHeight = 55;
+    private static readonly int halfBarWidth = 450;
+    
     [SerializeField] private RectTransform elapsedRect;
-    private float rightPosition = 500;
+    private float rightPosition = barWidth;
     public static TimerBarBehaviour Instance;
 
-    private bool timerStarted = false;
+    public bool timerStarted = false;
     private MovementRecorder movementRecorder;
     private int recordingStartTime;
     private int playbackFrameCount;
-    private bool recordingMovement = false;
-    private bool playbackMovement = false;
+    public bool recordingMovement = false;
+    public bool playbackMovement = false;
     private int fixedFrameCount = 0;
     private Dictionary<int, MovementState> inputRecording;
 
@@ -59,20 +63,20 @@ public class TimerBarBehaviour : MonoBehaviour
         if (rightPosition == 0) return;
         recordingMovement = true;
         //elapsedRect.position += Time.deltaTime * Vector3.right * elapsedRect.rect.width * .2f;
-        rightPosition -= Time.deltaTime * 100;
+        rightPosition -= Time.deltaTime * barWidth * .2f;
         if (rightPosition <= 0)
         {
             rightPosition = 0;
-            elapsedRect.localPosition = -250 * Vector3.right;
+            elapsedRect.localPosition = -halfBarWidth * Vector3.right;
             recordingMovement = false;
             playbackMovement = true;
-            rightPosition = 500;
+            rightPosition = barWidth;
             TruckBehaviour.Instance.car.isKinematic = false;
             playbackFrameCount = 0;
             inputRecording = movementRecorder.GetRecording();
             Debug.Log(string.Join(Environment.NewLine, inputRecording));
         }
-        elapsedRect.localPosition = (250 - rightPosition) * Vector3.right;
+        elapsedRect.localPosition = (halfBarWidth - rightPosition) * Vector3.right;
     }
 
     private void RecordInputs()
@@ -105,7 +109,7 @@ public class TimerBarBehaviour : MonoBehaviour
             if (!moving && !braking)
             {
                 ((RectTransform)currentBar.transform).sizeDelta =
-                    new Vector2((250 - rightPosition) - currentBar.transform.localPosition.x, 20);
+                    new Vector2((halfBarWidth - rightPosition) - currentBar.transform.localPosition.x, barHeight);
                 currentRectWidth = 0;
                 return;
             }
@@ -121,15 +125,15 @@ public class TimerBarBehaviour : MonoBehaviour
             }
             
             currentBar = Instantiate(currentBarPrefab, barParent);
-            currentBar.transform.localPosition = (250 - rightPosition) * Vector3.right;
-            ((RectTransform)currentBar.transform).sizeDelta = new Vector2(0, 20);
+            currentBar.transform.localPosition = (halfBarWidth - rightPosition) * Vector3.right;
+            ((RectTransform)currentBar.transform).sizeDelta = new Vector2(0, barHeight);
             currentRectWidth = 0;
 
         } else if (moving || braking)
         {
-            currentRectWidth += Time.fixedDeltaTime * 20;
+            currentRectWidth += Time.fixedDeltaTime * barHeight;
             ((RectTransform)currentBar.transform).sizeDelta =
-                new Vector2((250 - rightPosition) - currentBar.transform.localPosition.x, 20);
+                new Vector2((halfBarWidth - rightPosition) - currentBar.transform.localPosition.x, barHeight);
         }
     }
 
@@ -143,15 +147,15 @@ public class TimerBarBehaviour : MonoBehaviour
 
     private void PlayBackFixedFrame()
     {
-        rightPosition -= Time.fixedDeltaTime * 100;
+        rightPosition -= Time.fixedDeltaTime * barWidth * .2f;
         if (rightPosition <= 0)
         {
             rightPosition = 0;
             timerStarted = false;
-            elapsedRect.localPosition = -250 * Vector3.right;
+            elapsedRect.localPosition = -halfBarWidth * Vector3.right;
             playbackMovement = false;
         }
-        elapsedRect.localPosition = (250 - rightPosition) * Vector3.right;
+        elapsedRect.localPosition = (halfBarWidth - rightPosition) * Vector3.right;
         //Debug.Log("Playback!");
         if (inputRecording.ContainsKey(playbackFrameCount))
         {
@@ -172,8 +176,8 @@ public class TimerBarBehaviour : MonoBehaviour
 
     public void Reset()
     {
-        elapsedRect.localPosition = -250 * Vector3.right;
-        rightPosition = 500;
+        elapsedRect.localPosition = -halfBarWidth * Vector3.right;
+        rightPosition = barWidth;
         timerStarted = false;
         recordingMovement = false;
         recordingStartTime = 0;

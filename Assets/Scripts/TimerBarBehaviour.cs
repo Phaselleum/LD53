@@ -49,6 +49,7 @@ public class TimerBarBehaviour : MonoBehaviour
 
     private void Update()
     {
+        //if (GrabberBehaviour.Instance.grabberIsActive) return;
         //handle input recording
         if (timerStarted && recordingMovement) RecordInputs();
         if (timerStarted && !recordingMovement) return;

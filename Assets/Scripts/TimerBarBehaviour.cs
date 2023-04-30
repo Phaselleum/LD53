@@ -50,15 +50,16 @@ public class TimerBarBehaviour : MonoBehaviour
         if (rightPosition <= 0)
         {
             rightPosition = 0;
-            elapsedRect.SetRight(rightPosition);
+            elapsedRect.localPosition = -250 * Vector3.right;
             recordingMovement = false;
             playbackMovement = true;
+            rightPosition = 500;
             TruckBehaviour.Instance.car.isKinematic = false;
             playbackFrameCount = 0;
             inputRecording = movementRecorder.GetRecording();
             Debug.Log(string.Join(Environment.NewLine, inputRecording));
         }
-        elapsedRect.SetRight(rightPosition);
+        elapsedRect.localPosition = (250 - rightPosition) * Vector3.right;
     }
 
     private void RecordInputs()
@@ -74,11 +75,11 @@ public class TimerBarBehaviour : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            movementRecorder.AddEntry(fixedFrameCount, MovementState.BREAKINGSTART);
+            movementRecorder.AddEntry(fixedFrameCount, MovementState.BRAKINGSTART);
         }
         if (Input.GetKeyUp(KeyCode.LeftControl))
         {
-            movementRecorder.AddEntry(fixedFrameCount, MovementState.BREAKINGEND);
+            movementRecorder.AddEntry(fixedFrameCount, MovementState.BRAKINGEND);
         }
     }
 
@@ -92,10 +93,19 @@ public class TimerBarBehaviour : MonoBehaviour
 
     private void PlayBackFixedFrame()
     {
+        rightPosition -= Time.fixedDeltaTime * 100;
+        if (rightPosition <= 0)
+        {
+            rightPosition = 0;
+            timerStarted = false;
+            elapsedRect.localPosition = -250 * Vector3.right;
+            playbackMovement = false;
+        }
+        elapsedRect.localPosition = (250 - rightPosition) * Vector3.right;
         //Debug.Log("Playback!");
         if (inputRecording.ContainsKey(playbackFrameCount))
         {
-            Debug.Log("Input!");
+            Debug.Log($"Input: {inputRecording[playbackFrameCount]}");
             TruckBehaviour.Instance.Move(inputRecording[playbackFrameCount]);
         }
         playbackFrameCount++;
@@ -112,7 +122,7 @@ public class TimerBarBehaviour : MonoBehaviour
 
     public void Reset()
     {
-        elapsedRect.SetRight(500);
+        elapsedRect.localPosition = -250 * Vector3.right;
         rightPosition = 500;
         timerStarted = false;
         recordingMovement = false;
@@ -120,29 +130,5 @@ public class TimerBarBehaviour : MonoBehaviour
         playbackFrameCount = 0;
         fixedFrameCount = 0;
         TruckBehaviour.Instance.car.isKinematic = true;
-    }
-}
-
-
-public static class RectTransformExtensions
-{
-    public static void SetLeft(this RectTransform rt, float left)
-    {
-        rt.offsetMin = new Vector2(left, rt.offsetMin.y);
-    }
- 
-    public static void SetRight(this RectTransform rt, float right)
-    {
-        rt.offsetMax = new Vector2(-right, rt.offsetMax.y);
-    }
- 
-    public static void SetTop(this RectTransform rt, float top)
-    {
-        rt.offsetMax = new Vector2(rt.offsetMax.x, -top);
-    }
- 
-    public static void SetBottom(this RectTransform rt, float bottom)
-    {
-        rt.offsetMin = new Vector2(rt.offsetMin.x, bottom);
     }
 }

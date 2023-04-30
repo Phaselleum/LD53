@@ -34,6 +34,6 @@ public enum MovementState {
     NOTHING,
     MOVEMENTSTART,
     MOVEMENTEND,
-    BREAKINGSTART,
-    BREAKINGEND
+    BRAKINGSTART,
+    BRAKINGEND
 }

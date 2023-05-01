@@ -16,8 +16,8 @@ public class TruckBehaviour : MonoBehaviour
     [SerializeField] private WheelBehaviour wheelLBehaviour;
     [SerializeField] private WheelBehaviour wheelRBehaviour;
 
-    private bool moving;
-    private bool braking;
+    [SerializeField] private bool moving;
+    [SerializeField] private bool braking;
     [SerializeField] private Vector3 initialPosition = Vector3.zero;
     private Quaternion initialRotation = Quaternion.identity;
     public Vector3 checkpointOffset = Vector3.zero;
@@ -31,6 +31,8 @@ public class TruckBehaviour : MonoBehaviour
 
     [SerializeField] private AudioSource carSound;
     [SerializeField] private AudioSource brakeSound;
+
+    public bool isTouchingFlag;
 
     public static TruckBehaviour Instance;
 
@@ -63,6 +65,16 @@ public class TruckBehaviour : MonoBehaviour
         else UnBreakingAction();
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.name == "flag") isTouchingFlag = true;
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if(other.name == "flag") isTouchingFlag = false;
+    }
+
     private void OnTriggerStay2D(Collider2D other)
     {
         //Checks for checkpoint or win condition (only if the vehicle reaches the point after the time has passed)
@@ -70,9 +82,8 @@ public class TruckBehaviour : MonoBehaviour
         if (TimerBarBehaviour.Instance.recordingMovement) return;
         if (CanvasButtons.Instance.winScreen.activeSelf) return;
         if (GrabberBehaviour.Instance.goalReached) return;
-        if(other.name == "flag") SetCheckpoint(other.transform.position, false);
         if(other.name == "goal") SetCheckpoint(other.transform.position, true);
-        Debug.Log($"Entered Trigger: {other.name}");
+        if(other.name == "flag") SetCheckpoint(other.transform.position, false);
     }
 
     /// <summary>
@@ -113,6 +124,7 @@ public class TruckBehaviour : MonoBehaviour
         wheelLJoint.motor = wheelLJointMotor;
         wheelRJoint.motor = wheelRJointMotor;
         UnBreakingAction();
+        PlayMoveAudio(false);
     }
 
     /// <summary>
@@ -234,6 +246,13 @@ public class TruckBehaviour : MonoBehaviour
         wheelR.velocity = Vector2.zero;
         wheelR.rotation = 0;
         wheelR.angularVelocity = 0;
+        braking = false;
+        moving = false;
+        PlayMoveAudio(false);
+    }
+
+    public void ResetActiveMovement()
+    {
         braking = false;
         moving = false;
     }

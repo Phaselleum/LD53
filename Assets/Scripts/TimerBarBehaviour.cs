@@ -31,8 +31,10 @@ public class TimerBarBehaviour : MonoBehaviour
     [SerializeField] private GameObject mixedBarPrefab;
     [SerializeField] private Transform barParent;
     
-    private bool moving;
-    private bool braking;
+    [SerializeField] private AudioSource pingAudio;
+    
+    [SerializeField] private bool moving;
+    [SerializeField] private bool braking;
     private Rect currentBarRect;
     private GameObject currentBar;
     private GameObject currentBarPrefab;
@@ -167,6 +169,12 @@ public class TimerBarBehaviour : MonoBehaviour
             elapsedRect.localPosition = (-halfBarWidth - 18) * Vector3.right;
             playbackMovement = false;
             TruckBehaviour.Instance.EndMovement();
+            if(TruckBehaviour.Instance.isTouchingFlag)
+            {
+                ResetTimerBar();
+                TruckBehaviour.Instance.ResetActiveMovement();
+                pingAudio.Play();
+            }
             //GrabberBehaviour.Instance.GrabVehicle();
         }
         //bar indicator
@@ -184,7 +192,7 @@ public class TimerBarBehaviour : MonoBehaviour
     /// </summary>
     public void ResetTimerBar()
     {
-        elapsedRect.localPosition = -halfBarWidth * Vector3.right;
+        elapsedRect.localPosition = (-halfBarWidth - 18) * Vector3.right;
         rightPosition = barWidth;
         timerStarted = false;
         recordingMovement = false;
@@ -195,6 +203,7 @@ public class TimerBarBehaviour : MonoBehaviour
         //TruckBehaviour.Instance.car.isKinematic = true;
         moving = false;
         braking = false;
+        inputRecording.Clear();
         foreach(Transform child in barParent) Destroy(child.gameObject);
     }
 }

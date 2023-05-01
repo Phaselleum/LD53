@@ -32,12 +32,12 @@ public class MenuBehaviour : MonoBehaviour
     
     public void Level3()
     {
-        SceneManager.LoadSceneAsync("Scene03");
+        SceneManager.LoadSceneAsync("Scene04");
     }
     
     public void Level4()
     {
-        SceneManager.LoadSceneAsync("Scene04");
+        SceneManager.LoadSceneAsync("Scene06Long");
     }
     
     public void Quit()

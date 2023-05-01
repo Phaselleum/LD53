@@ -45,7 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75cbb88c4a3f06745826caeb36a928e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabberIsActive: 1
   goalReached: 0
   animator: {fileID: 8978328388831256042}
 --- !u!1 &1338414895327466487
@@ -717,7 +716,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 79389be00704f3f49840a1abd6c59044, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.4
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 0
   Mute: 0

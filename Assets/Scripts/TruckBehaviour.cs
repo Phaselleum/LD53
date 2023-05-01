@@ -32,6 +32,10 @@ public class TruckBehaviour : MonoBehaviour
     [SerializeField] private AudioSource carSound;
     [SerializeField] private AudioSource brakeSound;
 
+    [SerializeField] private GameObject mailTruck;
+    [SerializeField] private GameObject mailLorry;
+    [SerializeField] private GameObject mailCar;
+
     public bool isTouchingFlag;
 
     public static TruckBehaviour Instance;
@@ -276,5 +280,29 @@ public class TruckBehaviour : MonoBehaviour
             GrabberBehaviour.Instance.goalReached = true;
             GrabberBehaviour.Instance.GrabVehicle(checkpointOffset);
         }
+    }
+
+    public void SwitchToTruck()
+    {
+        mailTruck.SetActive(true);
+        mailLorry.SetActive(false);
+        mailCar.SetActive(false);
+        GetComponent<Rigidbody2D>().mass = 8;
+    }
+
+    public void SwitchToLorry()
+    {
+        mailTruck.SetActive(false);
+        mailLorry.SetActive(true);
+        mailCar.SetActive(false);
+        GetComponent<Rigidbody2D>().mass = 4;
+    }
+
+    public void SwitchToCar()
+    {
+        mailTruck.SetActive(false);
+        mailLorry.SetActive(false);
+        mailCar.SetActive(true);
+        GetComponent<Rigidbody2D>().mass = 2;
     }
 }

@@ -935,6 +935,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Truck
       objectReference: {fileID: 0}
+    - target: {fileID: 4823798506194196405, guid: b12a2dc2659def74989313ff4690ef9c, type: 3}
+      propertyPath: m_Name
+      value: mailCar
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

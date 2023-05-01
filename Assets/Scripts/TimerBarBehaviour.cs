@@ -203,7 +203,7 @@ public class TimerBarBehaviour : MonoBehaviour
         //TruckBehaviour.Instance.car.isKinematic = true;
         moving = false;
         braking = false;
-        inputRecording.Clear();
+        inputRecording?.Clear();
         foreach(Transform child in barParent) Destroy(child.gameObject);
     }
 }

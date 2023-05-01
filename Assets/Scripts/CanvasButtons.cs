@@ -56,4 +56,20 @@ public class CanvasButtons : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(0);
     }
+
+    public void SwitchVehicle(int i)
+    {
+        switch (i)
+        {
+            case 0:
+                TruckBehaviour.Instance.SwitchToLorry();
+                break;
+            case 1:
+                TruckBehaviour.Instance.SwitchToTruck();
+                break;
+            case 2:
+                TruckBehaviour.Instance.SwitchToCar();
+                break;
+        }
+    }
 }

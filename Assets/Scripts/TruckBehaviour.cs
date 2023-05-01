@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class TruckBehaviour : MonoBehaviour
 {
@@ -28,7 +29,8 @@ public class TruckBehaviour : MonoBehaviour
     [SerializeField] private float maxSpeed = 800f;
     [SerializeField] private float brakeforce = 1000f;
 
-    [SerializeField] private AudioSource carNoise;
+    [SerializeField] private AudioSource carSound;
+    [SerializeField] private AudioSource brakeSound;
 
     public static TruckBehaviour Instance;
 
@@ -46,7 +48,8 @@ public class TruckBehaviour : MonoBehaviour
     private void Update()
     {
         if(GrabberBehaviour.Instance.goalReached && 
-           GrabberBehaviour.Instance.transform.position.y - transform.position.y < -7)
+           GrabberBehaviour.Instance.transform.position.y - transform.position.y < -7 && 
+           !CanvasButtons.Instance.winScreen.activeSelf)
         {
             CanvasButtons.Instance.ShowWinScreen();
         }
@@ -89,6 +92,7 @@ public class TruckBehaviour : MonoBehaviour
                 moving = false;
                 break;
             case MovementState.BRAKING_START:
+                if (!braking) PlayBrakeAudio(true);
                 braking = true;
                 break;
             case MovementState.BRAKING_END:
@@ -146,12 +150,25 @@ public class TruckBehaviour : MonoBehaviour
     {
         if(play)
         {
-            carNoise.time = 0;
-            carNoise.Play();
+            carSound.time = 0;
+            carSound.Play();
         }
         else
         {
-            carNoise.Stop();
+            carSound.Stop();
+        }
+    }
+
+    private void PlayBrakeAudio(bool play)
+    {
+        if(play)
+        {
+            brakeSound.time = 0;
+            brakeSound.Play();
+        }
+        else
+        {
+            brakeSound.Stop();
         }
     }
 

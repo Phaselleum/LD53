@@ -237,7 +237,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &693459532
 PrefabInstance:
@@ -253,7 +253,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2794823530487355475, guid: 90034156dd0751245975f13fa1800c80, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2794823530487355475, guid: 90034156dd0751245975f13fa1800c80, type: 3}
       propertyPath: m_LocalPosition.x
@@ -299,6 +299,38 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 254097749}
+    - target: {fileID: 5425108026396673834, guid: 90034156dd0751245975f13fa1800c80, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 693459533}
+    - target: {fileID: 5425108026396673834, guid: 90034156dd0751245975f13fa1800c80, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: Level1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5425108026396673834, guid: 90034156dd0751245975f13fa1800c80, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: MenuBehaviour, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5425108026396673834, guid: 90034156dd0751245975f13fa1800c80, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616853425510730158, guid: 90034156dd0751245975f13fa1800c80, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 693459533}
+    - target: {fileID: 5616853425510730158, guid: 90034156dd0751245975f13fa1800c80, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: Level2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616853425510730158, guid: 90034156dd0751245975f13fa1800c80, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: MenuBehaviour, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616853425510730158, guid: 90034156dd0751245975f13fa1800c80, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 6367543528455011834, guid: 90034156dd0751245975f13fa1800c80, type: 3}
       propertyPath: m_text
       value: 01
@@ -316,6 +348,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 90034156dd0751245975f13fa1800c80, type: 3}
+--- !u!114 &693459533 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5439336670829800797, guid: 90034156dd0751245975f13fa1800c80, type: 3}
+  m_PrefabInstance: {fileID: 693459532}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d38c33656070ac742aa50bf89bf2d958, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &866885816
 GameObject:
   m_ObjectHideFlags: 0
@@ -399,7 +442,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &866885820
 BoxCollider2D:
@@ -608,7 +651,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!68 &1444029098
 EdgeCollider2D:
@@ -834,7 +877,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1754262177
 PrefabInstance:
@@ -963,7 +1006,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1592140682190173867
 PrefabInstance:

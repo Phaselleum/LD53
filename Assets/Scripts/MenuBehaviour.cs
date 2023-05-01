@@ -7,12 +7,37 @@ public class MenuBehaviour : MonoBehaviour
 {
     public void Play()
     {
-        SceneManager.LoadScene("Scene01");
+        SceneManager.LoadSceneAsync("Scene01");
     }
     
     public void Instructions()
     {
-        SceneManager.LoadScene("Instructions");
+        SceneManager.LoadSceneAsync("Instructions");
+    }
+    
+    public void Levels()
+    {
+        SceneManager.LoadSceneAsync("Levels");
+    }
+    
+    public void Level1()
+    {
+        SceneManager.LoadSceneAsync("Scene01");
+    }
+    
+    public void Level2()
+    {
+        SceneManager.LoadSceneAsync("Scene02");
+    }
+    
+    public void Level3()
+    {
+        SceneManager.LoadSceneAsync("Scene03");
+    }
+    
+    public void Level4()
+    {
+        SceneManager.LoadSceneAsync("Scene04");
     }
     
     public void Quit()

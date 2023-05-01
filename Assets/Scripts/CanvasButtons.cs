@@ -9,6 +9,7 @@ public class CanvasButtons : MonoBehaviour
     public static CanvasButtons Instance;
 
     public GameObject winScreen;
+    [SerializeField] private AudioSource winSound;
 
     private void Awake()
     {
@@ -23,7 +24,7 @@ public class CanvasButtons : MonoBehaviour
             if (winScreen.activeSelf)
             {
                 winScreen.SetActive(false);
-                SceneManager.LoadScene(0);
+                SceneManager.LoadSceneAsync(0);
             }
         }
     }
@@ -34,6 +35,7 @@ public class CanvasButtons : MonoBehaviour
     public void ShowWinScreen()
     {
         winScreen.SetActive(true);
+        winSound.Play();
     }
 
     /// <summary>
@@ -49,6 +51,6 @@ public class CanvasButtons : MonoBehaviour
 
     public void Menu()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadSceneAsync(0);
     }
 }

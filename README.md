@@ -1,6 +1,8 @@
 # Patman
 Ludum Dare 53 Jam Entry. Theme: "Delivery".
 
+https://ldjam.com/events/ludum-dare/53/patman
+
 Created in 72h from scratch using:
 - Unity
 - JetBrains Rider

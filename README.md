@@ -6,6 +6,7 @@ Created in 72h from scratch using:
 - Paint.NET
 - Midjourney AI (Splash Screen)
 - Figma
+- REAPER
 
 Developed by:
 Frederick Brandes

@@ -28,6 +28,8 @@ public class TruckBehaviour : MonoBehaviour
     [SerializeField] private float maxSpeed = 800f;
     [SerializeField] private float brakeforce = 1000f;
 
+    [SerializeField] private AudioSource carNoise;
+
     public static TruckBehaviour Instance;
 
     private void Awake()
@@ -47,7 +49,6 @@ public class TruckBehaviour : MonoBehaviour
            GrabberBehaviour.Instance.transform.position.y - transform.position.y < -7)
         {
             CanvasButtons.Instance.ShowWinScreen();
-            Debug.Log($"{GrabberBehaviour.Instance.transform.position.y} - {transform.position.y} = {GrabberBehaviour.Instance.transform.position.y - transform.position.y}");
         }
     }
 
@@ -80,9 +81,11 @@ public class TruckBehaviour : MonoBehaviour
         switch (movementState)
         {
             case MovementState.MOVEMENT_START:
+                if (!moving) PlayMoveAudio(true);
                 moving = true;
                 break;
             case MovementState.MOVEMENT_END:
+                if (moving) PlayMoveAudio(false);
                 moving = false;
                 break;
             case MovementState.BRAKING_START:
@@ -137,6 +140,19 @@ public class TruckBehaviour : MonoBehaviour
         wheelRJoint.motor = wheelRJointMotor;
 
         //car.AddRelativeForce(transform.right * speed * Time.fixedDeltaTime);
+    }
+
+    private void PlayMoveAudio(bool play)
+    {
+        if(play)
+        {
+            carNoise.time = 0;
+            carNoise.Play();
+        }
+        else
+        {
+            carNoise.Stop();
+        }
     }
 
     private void IdleAction()

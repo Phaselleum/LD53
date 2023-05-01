@@ -49,6 +49,9 @@ public class CanvasButtons : MonoBehaviour
         GrabberBehaviour.Instance.ResetGrabber();
     }
 
+    /// <summary>
+    /// Load the menu scene
+    /// </summary>
     public void Menu()
     {
         SceneManager.LoadSceneAsync(0);

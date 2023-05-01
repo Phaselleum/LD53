@@ -27,6 +27,7 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
+        //Don't follow the target in the first 5 seconds (to account for grabber animation)
         startTime += Time.deltaTime;
         if (startTime < 5) return;
         if(offset == Vector3.zero)
@@ -34,17 +35,25 @@ public class CameraController : MonoBehaviour
             offset = transform.position - target.position;
         }
 
+        //Don't follow the target after the goal has been reached
         if (GrabberBehaviour.Instance.goalReached) return;
         //follow the target object
         transform.position = target.position + offset;
     }
 
+    /// <summary>
+    /// Sets the initial camera position in case a checkpoint has been reached
+    /// </summary>
+    /// <param name="newOffset">Offset from starting position</param>
     public void SetInitialCameraPosition(Vector3 newOffset)
     {
         initialPos += newOffset;
         transform.position = initialPos;
     }
 
+    /// <summary>
+    /// Reset camera position to last checkpoint
+    /// </summary>
     public void ResetCamera()
     {
         startTime = 0;

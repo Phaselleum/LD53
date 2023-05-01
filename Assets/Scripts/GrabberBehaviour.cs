@@ -6,7 +6,6 @@ using UnityEngine;
 public class GrabberBehaviour : MonoBehaviour
 {
     public static GrabberBehaviour Instance;
-    public bool grabberIsActive = true;
     public bool goalReached = false;
     
     [SerializeField] private Animator animator;
@@ -24,12 +23,19 @@ public class GrabberBehaviour : MonoBehaviour
         initalPos = transform.position;
     }
 
+    /// <summary>
+    /// Sets the grabber position to a given offset to account for having reached a checkpoint
+    /// </summary>
+    /// <param name="offset">Offset from starting position</param>
     public void SetGrabberPositionOffset(Vector3 offset)
     {
         initalPos += offset;
         transform.position = initalPos;
     }
 
+    /// <summary>
+    /// Reset grabber position to the last checkpoint and play the placement animation
+    /// </summary>
     public void ResetGrabber()
     {
         animator.Play("GrabberStart", 0, 0);
@@ -37,6 +43,10 @@ public class GrabberBehaviour : MonoBehaviour
         goalReached = false;
     }
 
+    /// <summary>
+    /// Attempt to grab the vehicle at the end position
+    /// </summary>
+    /// <param name="tempOffset"></param>
     public void GrabVehicle(Vector3 tempOffset)
     {
         transform.position = initalPos + tempOffset;

@@ -15,10 +15,11 @@ public class TruckBehaviour : MonoBehaviour
     [SerializeField] private WheelBehaviour wheelLBehaviour;
     [SerializeField] private WheelBehaviour wheelRBehaviour;
 
-    private bool movement;
+    private bool moving;
     private bool braking;
-    [SerializeField] private Vector3 initialPosition;
-    private Quaternion initialRotation;
+    [SerializeField] private Vector3 initialPosition = Vector3.zero;
+    private Quaternion initialRotation = Quaternion.identity;
+    public Vector3 checkpointOffset = Vector3.zero;
 
     private float deceleration = -400f;
     private float gravity = 9.8f;
@@ -32,17 +33,27 @@ public class TruckBehaviour : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        initialPosition = transform.position;
-        initialRotation = transform.rotation;
+        initialPosition = transform.position - 11 * Vector3.up;
+        //initialRotation = transform.rotation;
         //car.centerOfMass = new Vector2(0, 0f);
 
         wheelLJointMotor = wheelLJoint.motor;
         wheelRJointMotor = wheelRJoint.motor;
     }
 
+    private void Update()
+    {
+        if(GrabberBehaviour.Instance.goalReached && 
+           GrabberBehaviour.Instance.transform.position.y - transform.position.y < -7)
+        {
+            CanvasButtons.Instance.ShowWinScreen();
+            Debug.Log($"{GrabberBehaviour.Instance.transform.position.y} - {transform.position.y} = {GrabberBehaviour.Instance.transform.position.y - transform.position.y}");
+        }
+    }
+
     private void FixedUpdate()
     {
-        if (movement) MovementAction();
+        if (moving) MovementAction();
         else IdleAction();
         if(braking) BrakingAction();
         else UnBreakingAction();
@@ -54,8 +65,10 @@ public class TruckBehaviour : MonoBehaviour
         if (TimerBarBehaviour.Instance.playbackMovement) return;
         if (TimerBarBehaviour.Instance.recordingMovement) return;
         if (CanvasButtons.Instance.winScreen.activeSelf) return;
-        if(other.name == "flag") SetCheckpoint(other.transform.position);
-        if(other.name == "goal") CanvasButtons.Instance.ShowWinScreen();
+        if (GrabberBehaviour.Instance.goalReached) return;
+        if(other.name == "flag") SetCheckpoint(other.transform.position, false);
+        if(other.name == "goal") SetCheckpoint(other.transform.position, true);
+        Debug.Log($"Entered Trigger: {other.name}");
     }
 
     /// <summary>
@@ -67,10 +80,10 @@ public class TruckBehaviour : MonoBehaviour
         switch (movementState)
         {
             case MovementState.MOVEMENT_START:
-                movement = true;
+                moving = true;
                 break;
             case MovementState.MOVEMENT_END:
-                movement = false;
+                moving = false;
                 break;
             case MovementState.BRAKING_START:
                 braking = true;
@@ -86,7 +99,7 @@ public class TruckBehaviour : MonoBehaviour
     /// </summary>
     public void EndMovement()
     {
-        movement = false;
+        moving = false;
         braking = false;
         wheelLJointMotor.motorSpeed = 0;
         wheelRJointMotor.motorSpeed = 0;
@@ -156,10 +169,10 @@ public class TruckBehaviour : MonoBehaviour
     {
         if (wheelLBehaviour.isMakingContact && wheelRBehaviour.isMakingContact)
         {
-            car.drag = 100;
+            car.drag = 10;
         }
-        wheelL.angularDrag = 100;
-        wheelR.angularDrag = 100;
+        wheelL.angularDrag = 10;
+        wheelR.angularDrag = 10;
     }
 
     /// <summary>
@@ -177,7 +190,7 @@ public class TruckBehaviour : MonoBehaviour
     /// </summary>
     public void ResetPosition()
     {
-        transform.position = initialPosition;
+        transform.position = initialPosition + 11.5f * Vector3.up;
         transform.rotation = initialRotation;
         car.velocity = Vector2.zero;
         car.rotation = 0;
@@ -188,15 +201,28 @@ public class TruckBehaviour : MonoBehaviour
         wheelR.velocity = Vector2.zero;
         wheelR.rotation = 0;
         wheelR.angularVelocity = 0;
-        UnBreakingAction();
+        braking = false;
+        moving = false;
     }
 
     /// <summary>
     /// Sets the reset position to a given position (for checkpoints)
     /// </summary>
     /// <param name="pos"></param>
-    public void SetCheckpoint(Vector3 pos)
+    public void SetCheckpoint(Vector3 pos, bool isGoal)
     {
-        initialPosition = pos;
+        if(!isGoal)
+        {
+            checkpointOffset = pos - initialPosition;
+            initialPosition = pos;
+            GrabberBehaviour.Instance.SetGrabberPositionOffset(checkpointOffset);
+            CameraController.Instance.SetInitialCameraPosition(checkpointOffset);
+        }
+        else
+        {
+            checkpointOffset = pos - initialPosition;
+            GrabberBehaviour.Instance.goalReached = true;
+            GrabberBehaviour.Instance.GrabVehicle(checkpointOffset);
+        }
     }
 }

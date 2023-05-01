@@ -33,16 +33,18 @@ public class CanvasButtons : MonoBehaviour
     /// </summary>
     public void ShowWinScreen()
     {
-        //winScreen.SetActive(true);
+        winScreen.SetActive(true);
     }
 
     /// <summary>
     /// Resets the map to the last reached checkpoint
     /// </summary>
-    public void Reset()
+    public void ResetToCheckpoint()
     {
         TruckBehaviour.Instance.ResetPosition();
-        TimerBarBehaviour.Instance.Reset();
+        TimerBarBehaviour.Instance.ResetTimerBar();
+        CameraController.Instance.ResetCamera();
+        GrabberBehaviour.Instance.ResetGrabber();
     }
 
     public void Menu()

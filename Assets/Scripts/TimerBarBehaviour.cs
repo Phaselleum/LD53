@@ -44,7 +44,7 @@ public class TimerBarBehaviour : MonoBehaviour
 
     private void Start()
     {
-        TruckBehaviour.Instance.car.isKinematic = true;
+        //TruckBehaviour.Instance.car.isKinematic = true;
     }
 
     private void Update()
@@ -167,6 +167,7 @@ public class TimerBarBehaviour : MonoBehaviour
             elapsedRect.localPosition = (-halfBarWidth - 18) * Vector3.right;
             playbackMovement = false;
             TruckBehaviour.Instance.EndMovement();
+            //GrabberBehaviour.Instance.GrabVehicle();
         }
         //bar indicator
         elapsedRect.localPosition = (halfBarWidth - rightPosition - 18) * Vector3.right;
@@ -181,7 +182,7 @@ public class TimerBarBehaviour : MonoBehaviour
     /// <summary>
     /// Resets all timers and bars as well as vehicle physics
     /// </summary>
-    public void Reset()
+    public void ResetTimerBar()
     {
         elapsedRect.localPosition = -halfBarWidth * Vector3.right;
         rightPosition = barWidth;
@@ -191,7 +192,7 @@ public class TimerBarBehaviour : MonoBehaviour
         recordingStartTime = 0;
         playbackFrameCount = 0;
         fixedFrameCount = 0;
-        TruckBehaviour.Instance.car.isKinematic = true;
+        //TruckBehaviour.Instance.car.isKinematic = true;
         moving = false;
         braking = false;
         foreach(Transform child in barParent) Destroy(child.gameObject);

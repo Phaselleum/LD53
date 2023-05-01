@@ -7,9 +7,12 @@ public class GrabberBehaviour : MonoBehaviour
 {
     public static GrabberBehaviour Instance;
     public bool grabberIsActive = true;
+    public bool goalReached = false;
     
-    [SerializeField] private Animator startGrabber;
-    [SerializeField] private Animator endGrabber;
+    [SerializeField] private Animator animator;
+
+    private Vector3 initalPos;
+    private Vector3 tempPos;
 
     private void Awake()
     {
@@ -18,16 +21,25 @@ public class GrabberBehaviour : MonoBehaviour
 
     private void Start()
     {
-        StartGrabberAction();
+        initalPos = transform.position;
     }
 
-    private void StartGrabberAction()
+    public void SetGrabberPositionOffset(Vector3 offset)
     {
-        //startGrabber.Play();
+        initalPos += offset;
+        transform.position = initalPos;
     }
 
-    private void EndGrabberAction()
+    public void ResetGrabber()
     {
-        //endGrabber.Play();
+        animator.Play("GrabberStart", 0, 0);
+        transform.position = initalPos;
+        goalReached = false;
+    }
+
+    public void GrabVehicle(Vector3 tempOffset)
+    {
+        transform.position = initalPos + tempOffset;
+        animator.Play("GrabberEnd", 0, 0);
     }
 }
